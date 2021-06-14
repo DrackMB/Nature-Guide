@@ -35,7 +35,7 @@ define('DIR_PHP_CLASS','Models');
 
 define('DATABASE_HOST' , '127.0.0.1');
 define('DATABASE_TYPE' , 'mysql');
-define('DATABASE_NAME' , 'messenger');
+define('DATABASE_NAME' , 'natureguide');
 define('DATABASE_USERNAME' , 'root');
 define('DATABASE_PASSWORD' , '');  
 

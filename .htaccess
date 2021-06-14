@@ -8,7 +8,7 @@ RewriteEngine On
 
 #on ajoute le https à l'url modifié
 #RewriteCond %{SERVER_PORT} 80
-#RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301] 
+#RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]

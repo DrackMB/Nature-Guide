@@ -1,4 +1,7 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+
 //recuperation du fichier de configuration du site.
 require_once 'Config/conf.inc.php';
 require_once 'Config/autoload.php';
