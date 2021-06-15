@@ -10,7 +10,7 @@ class ville
     private $ing;
     private $etat;
 
-    public function remplireInfoMember($libelle, $lets,$ing,$etat) {
+    public function remplireInfoVille($libelle, $lets,$ing,$etat) {
         $this->libelle = $libelle;
         $this->lets = $lets;
         $this->ing = $ing;
