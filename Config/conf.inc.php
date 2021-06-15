@@ -14,8 +14,6 @@ $documment= $_SERVER['DOCUMENT_ROOT'];
 define('MAIL_ADMIN' , '');
 // Responsable technique du serveur
 define('MAIL_WEBMASTER' , '');    
-//Racine du site
-define('DOC_ROOT' ,$documment.'/Messenger/');
 
 define('URL_ROOT' , 'http://'.$domaine);
 //Definition du chemin d'accès CSS
