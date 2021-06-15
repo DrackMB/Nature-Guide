@@ -1,38 +1,30 @@
 <?php
 
 
-/**
- * Class Utilisateur : classe mère des objets Utilisateur. 
- * 
- *
- * @author dell (Mouad Boussaid)
- */
+
 class Utilisateur {
 
-    /**
-     * 
-     *
-     * @var String $pseudo pseudo de l'utilisateur
-     */
+
     private $pseudo ;    
-    /**
-     * 
-     *
-     * @var String $motDePasse motDePasse de l'utilisateur
-     */
-    private $motDePasse ;    
-    /**
-     * Method remplireInfo
-     *
-     * @param $nom $nom [explicite description]
-     * @param $motDePass $motDePass [explicite description]
-     *
-     * @return void
-     */
-    public function remplireInfoMember($pseudo, $motDePasse) {
+
+    private $motDePasse ;
+
+    private $email ;
+
+    private $nom ;
+
+    private $prenom ;
+
+
+
+    public function remplireInfoMember($pseudo, $motDePasse , $email ,$nom, $prenom) {
         $this->pseudo = $pseudo;
         $this->motDePasse = $motDePasse;
-        }
+        $this->nom = $nom;
+        $this->email = $email;
+        $this->prenom = $prenom;
+
+    }
     
     /**
      * Method creeCompt
@@ -48,12 +40,12 @@ class Utilisateur {
         $stm2 = $connection->prepare($sqlVeri);
         $stm2->execute(array(':pseudo' => $this->pseudo));
         if (empty($stm2->fetch(PDO::FETCH_ASSOC))) {
-            $sql = "INSERT INTO membres(pseudo,passe,lastAction) VALUES (?,?,?)";
+            $sql = "INSERT INTO membres(pseudo,nom,prenom,email,motDePasse) VALUES (?,?,?,?,?)";
             $stm = $connection->prepare($sql);
-            $stm->execute([$this->pseudo,password_hash($this->motDePasse, PASSWORD_DEFAULT),date('Y-m-d h:i:s',time())]);
+            $stm->execute([$this->pseudo,$this->nom,$this->prenom,$this->email,password_hash($this->motDePasse, PASSWORD_DEFAULT) ]);
             return 1;
         }else{
-            return -1 ;//Quelqu'un utiliser cette email
+            return -1 ;//Quelqu'un utiliser ce email
         } 
             
     }
@@ -69,13 +61,13 @@ class Utilisateur {
     public static function loging($pseudo, $motDepass) {
         global $Db;
         $connection = $Db->connection();
-        $sql = "SELECT idMembre,pseudo,passe FROM membres WHERE pseudo = :pseudo ";
+        $sql = "SELECT id,pseudo,motDePasse FROM membres WHERE pseudo = :pseudo ";
         $stm = $connection->prepare($sql);
         $stm->execute(array(':pseudo' => $pseudo));
         $row = $stm->fetch(PDO::FETCH_ASSOC);
         if (!empty($row)) {
-                if (password_verify($motDepass, $row['passe'])) {
-                    return $row['idMembre'];
+                if (password_verify($motDepass, $row['motDePasse'])) {
+                    return $row['id'];
                 } else {
                     return -1;//Mot de passe incorrect
                 }
