@@ -11,7 +11,6 @@ class EspaceVert
     private $ville;
     private $discription;
     private $imagePath;
-    private $temperature;
 
     /**
      * EspaceVert constructor.
@@ -21,9 +20,8 @@ class EspaceVert
      * @param $ville
      * @param $discription
      * @param $imagePath
-     * @param $temperature
      */
-    public function remplireEspaceVerte($libelle, $lets, $ing, $ville, $discription, $imagePath, $temperature)
+    public function remplireEspaceVerte($libelle, $lets, $ing, $ville, $discription, $imagePath)
     {
         $this->libelle = $libelle;
         $this->lets = $lets;
@@ -31,7 +29,6 @@ class EspaceVert
         $this->ville = $ville;
         $this->discription = $discription;
         $this->imagePath = $imagePath;
-        $this->temperature = $temperature;
     }
 
 
@@ -43,11 +40,11 @@ class EspaceVert
         $stm2->execute(array(':lets' => $this->lets,':ing'=>$this->ing));
         if (empty($stm2->fetch(PDO::FETCH_ASSOC))) {
             $ville = Ville::findByLibelle($this->ville);
-            if($ville!=-1){
+            if(!empty($ville)){
                $result=$ville->fetch(PDO::FETCH_OBJ);
-                $sql = "INSERT INTO espace_vert(libelle,lets,ing,id_ville,description,image, temperature) VALUES (?,?,?,?,?,?,?)";
+                $sql = "INSERT INTO espace_vert(libelle,lets,ing,id_ville,description,image) VALUES (?,?,?,?,?,?)";
                 $stm = $connection->prepare($sql);
-                $stm->execute([$this->libelle,$this->lets,$this->ing,$this->result->id,$this->discription,$this->imagePath,$this->temperature]);
+                $stm->execute([$this->libelle,$this->lets,$this->ing,$result->id,$this->discription,$this->imagePath]);
                 return 1;
             }
         }else{
@@ -59,7 +56,7 @@ class EspaceVert
     public static function findAll() {
         global $Db;
         $connection = $Db->connection();
-        $sqlVeri = "SELECT libelle,lets,ing,id_ville,description,image, temperature FROM espace_vert ";
+        $sqlVeri = "SELECT libelle,lets,ing,id_ville,description,image FROM espace_vert ";
         $stm1 = $connection->prepare($sqlVeri);
         $stm1->execute();
         return $stm1;
@@ -68,12 +65,20 @@ class EspaceVert
     public static function findByLibelle($libelle) {
         global $Db;
         $connection = $Db->connection();
-        $sqlVeri = "SELECT libelle,lets,ing,id_ville,description,image, temperature FROM ville where libelle = :libelle";
+        $sqlVeri = "SELECT id,libelle,lets,ing,id_ville,description,image FROM espace_vert where libelle = :libelle";
         $stm1 = $connection->prepare($sqlVeri);
         $stm1->execute(array(':libelle'=>$libelle));
-        if(empty($stm1->fetch(PDO::FETCH_ASSOC))){
-            return -1;
-        }
+        return $stm1;
+    }
+    public static function findByVilleLibelle($libelle) {
+        global $Db;
+        $connection = $Db->connection();
+        $result = Ville::findByLibelle($libelle);
+        $row =$result->fetch(PDO::FETCH_OBJ);
+        $villeID = $row->id;
+        $sqlVeri = "SELECT espace_vert.libelle,espace_vert.lets,espace_vert.ing,espace_vert.description,espace_vert.image FROM espace_vert INNER JOIN ville ON espace_vert.id_ville = ville.id where ville.id=:villeID";
+        $stm1 = $connection->prepare($sqlVeri);
+        $stm1->execute(array(':villeID'=>$villeID));
         return $stm1;
     }
 
@@ -173,20 +178,5 @@ class EspaceVert
         $this->imagePath = $imagePath;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTemperature()
-    {
-        return $this->temperature;
-    }
-
-    /**
-     * @param mixed $temperature
-     */
-    public function setTemperature($temperature)
-    {
-        $this->temperature = $temperature;
-    }
 
 }

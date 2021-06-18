@@ -1,5 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods:GET,PUT,POST,DELETE,PATCH,OPTIONS");
+header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 header("Content-Type: application/json; charset=UTF-8");
 
 //recuperation du fichier de configuration du site.
